@@ -41,8 +41,9 @@ class MainViewController: UITableViewController {
 
         
         // Set data source
-        let countries = localCountries()
-        countryTextField.filterStrings(countries)
+//        let countries = localCountries()
+//        countryTextField.filterStrings(countries)
+        countryTextField.filterItems(localCountriesModel())
     }
     
     
@@ -136,7 +137,7 @@ class MainViewController: UITableViewController {
             do {
                 let jsonData = try Data(contentsOf: URL(fileURLWithPath: path), options: .dataReadingMapped)
                 let jsonResult = try JSONSerialization.jsonObject(with: jsonData, options: .allowFragments) as! [[String:String]]
-                
+
                 var countryNames = [String]()
                 for country in jsonResult {
                     countryNames.append(country["name"]!)
@@ -149,6 +150,15 @@ class MainViewController: UITableViewController {
             }
         }
         return []
+    }
+    
+    fileprivate func localCountriesModel() -> [SearchTextFieldItem] {
+        return [
+            SearchTextFieldItem(title: "Sastra Inggris", tags: "bahasa,sastra,sastra inggris,inggris"),
+            SearchTextFieldItem(title: "Sastra Indonesia", tags: "bahasa,sastra,sastra indonesia, inggris"),
+            SearchTextFieldItem(title: "Matematika", tags: "eksak,matematika"),
+            SearchTextFieldItem(title: "Fisika", tags: "eksak,fisika"),
+        ]
     }
     
     fileprivate func filterAcronymInBackground(_ criteria: String, callback: @escaping ((_ results: [SearchTextFieldItem]) -> Void)) {

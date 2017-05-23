@@ -363,41 +363,53 @@ open class SearchTextField: UITextField {
             
             var item = filterDataSource[i]
             
-            if !inlineMode {
-                // Find text in title and subtitle
-                let titleFilterRange = (item.title as NSString).range(of: text!, options: comparisonOptions)
-                let subtitleFilterRange = item.subtitle != nil ? (item.subtitle! as NSString).range(of: text!, options: comparisonOptions) : NSMakeRange(NSNotFound, 0)
-                
-                if titleFilterRange.location != NSNotFound || subtitleFilterRange.location != NSNotFound || addAll {
+            if let tags = item.tags {
+                if tags.lowercased().contains(text!.lowercased()) {
+                    let titleFilterRange = (item.title as NSString).range(of: text!, options: comparisonOptions)
                     item.attributedTitle = NSMutableAttributedString(string: item.title)
-                    item.attributedSubtitle = NSMutableAttributedString(string: (item.subtitle != nil ? item.subtitle! : ""))
-                    
-                    item.attributedTitle!.setAttributes(highlightAttributes, range: titleFilterRange)
-                    
-                    if subtitleFilterRange.location != NSNotFound {
-                        item.attributedSubtitle!.setAttributes(highlightAttributesForSubtitle(), range: subtitleFilterRange)
+                    if titleFilterRange.location != NSNotFound {
+                        item.attributedTitle!.setAttributes(highlightAttributes, range: titleFilterRange)
                     }
-                    
                     filteredResults.append(item)
                 }
             } else {
-                var textToFilter = text!.lowercased()
-                
-                if inlineMode, let filterAfter = startFilteringAfter {
-                    if let suffixToFilter = textToFilter.components(separatedBy: filterAfter).last, (suffixToFilter != "" || startSuggestingInmediately == true), textToFilter != suffixToFilter {
-                        textToFilter = suffixToFilter
-                    } else {
-                        placeholderLabel?.text = ""
-                        return
+                if !inlineMode {
+                    // Find text in title and subtitle
+                    let titleFilterRange = (item.title as NSString).range(of: text!, options: comparisonOptions)
+                    let subtitleFilterRange = item.subtitle != nil ? (item.subtitle! as NSString).range(of: text!, options: comparisonOptions) : NSMakeRange(NSNotFound, 0)
+                    
+                    if titleFilterRange.location != NSNotFound || subtitleFilterRange.location != NSNotFound || addAll {
+                        item.attributedTitle = NSMutableAttributedString(string: item.title)
+                        item.attributedSubtitle = NSMutableAttributedString(string: (item.subtitle != nil ? item.subtitle! : ""))
+                        
+                        item.attributedTitle!.setAttributes(highlightAttributes, range: titleFilterRange)
+                        
+                        if subtitleFilterRange.location != NSNotFound {
+                            item.attributedSubtitle!.setAttributes(highlightAttributesForSubtitle(), range: subtitleFilterRange)
+                        }
+                        
+                        filteredResults.append(item)
+                    }
+                } else {
+                    var textToFilter = text!.lowercased()
+                    
+                    if inlineMode, let filterAfter = startFilteringAfter {
+                        if let suffixToFilter = textToFilter.components(separatedBy: filterAfter).last, (suffixToFilter != "" || startSuggestingInmediately == true), textToFilter != suffixToFilter {
+                            textToFilter = suffixToFilter
+                        } else {
+                            placeholderLabel?.text = ""
+                            return
+                        }
+                    }
+                    
+                    if item.title.lowercased().hasPrefix(textToFilter) {
+                        let itemSuffix = item.title.substring(from: textToFilter.index(textToFilter.startIndex, offsetBy: textToFilter.characters.count))
+                        item.attributedTitle = NSMutableAttributedString(string: itemSuffix)
+                        filteredResults.append(item)
                     }
                 }
-                
-                if item.title.lowercased().hasPrefix(textToFilter) {
-                    let itemSuffix = item.title.substring(from: textToFilter.index(textToFilter.startIndex, offsetBy: textToFilter.characters.count))
-                    item.attributedTitle = NSMutableAttributedString(string: itemSuffix)
-                    filteredResults.append(item)
-                }
             }
+            
         }
     
         tableView?.reloadData()
@@ -560,19 +572,38 @@ public struct SearchTextFieldItem {
     // Public interface
     public var title: String
     public var subtitle: String?
+    public var tags: String?
     public var image: UIImage?
     
+    public init(title: String, subtitle: String?, image: UIImage?, tags: String?) {
+        self.title = title
+        self.subtitle = subtitle
+        self.image = image
+        self.tags = tags
+    }
+
     public init(title: String, subtitle: String?, image: UIImage?) {
         self.title = title
         self.subtitle = subtitle
         self.image = image
     }
 
+    public init(title: String, subtitle: String?, tags: String?) {
+        self.title = title
+        self.subtitle = subtitle
+        self.tags = tags
+    }
+    
     public init(title: String, subtitle: String?) {
         self.title = title
         self.subtitle = subtitle
     }
 
+    public init(title: String, tags: String?) {
+        self.title = title
+        self.tags = tags
+    }
+    
     public init(title: String) {
         self.title = title
     }
