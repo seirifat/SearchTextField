@@ -19,6 +19,8 @@ open class SearchTextField: UITextField {
     /// Maximum height of the results list
     open var maxResultsListHeight = 0
     
+    open var maxCustomHeight = 0
+    
     /// Indicate if this field has been interacted with yet
     open var interactedWith = false
     
@@ -237,6 +239,10 @@ open class SearchTextField: UITextField {
                     tableHeight = min(tableHeight, CGFloat(self.maxResultsListHeight))
                 }
                 
+                if maxCustomHeight > 0 {
+                    tableHeight = CGFloat(maxCustomHeight)
+                }
+                
                 var tableViewFrame = CGRect(x: 0, y: 0, width: frame.size.width - 4, height: tableHeight)
                 tableViewFrame.origin = self.convert(tableViewFrame.origin, to: nil)
                 tableViewFrame.origin.x += 2
@@ -251,7 +257,10 @@ open class SearchTextField: UITextField {
                 shadowFrame.origin.y = tableView.frame.origin.y
                 shadowView!.frame = shadowFrame
             } else {
-                let tableHeight = min((tableView.contentSize.height + positionGap), (UIScreen.main.bounds.size.height - frame.origin.y - theme.cellHeight * 2))
+                var tableHeight = min((tableView.contentSize.height + positionGap), (UIScreen.main.bounds.size.height - frame.origin.y - theme.cellHeight * 2))
+                if maxCustomHeight > 0 {
+                    tableHeight = CGFloat(maxCustomHeight)
+                }
                 UIView.animate(withDuration: 0.2, animations: { [weak self] in
                     self?.tableView?.frame = CGRect(x: frame.origin.x + 2, y: (frame.origin.y - tableHeight + positionGap), width: frame.size.width - 4, height: tableHeight)
                     self?.shadowView?.frame = CGRect(x: frame.origin.x + 3, y: (frame.origin.y + 3), width: frame.size.width - 6, height: 1)

@@ -46,6 +46,7 @@ class MainViewController: UITableViewController {
         countryTextField.filterItems(localCountriesModel())
         countryTextField.direction = .up
         countryTextField.keyboardIsShowing = true
+        countryTextField.maxCustomHeight = 12
     }
     
     
@@ -158,6 +159,12 @@ class MainViewController: UITableViewController {
         return [
             SearchTextFieldItem(title: "Sastra Inggris", tags: "bahasa,sastra,sastra inggris,inggris"),
             SearchTextFieldItem(title: "Sastra Indonesia", tags: "bahasa,sastra,sastra indonesia, inggris"),
+            SearchTextFieldItem(title: "Sastra asd", tags: "bahasa,sastra,sastra indonesia, inggris"),
+            SearchTextFieldItem(title: "Sastra dsds", tags: "bahasa,sastra,sastra indonesia, inggris"),
+            SearchTextFieldItem(title: "Sastra aa", tags: "bahasa,sastra,sastra indonesia, inggris"),
+            SearchTextFieldItem(title: "sdds dsdsd", tags: "bahasa,sastra,sastra indonesia, inggris"),
+            SearchTextFieldItem(title: "Sastra Indofasnesia", tags: "bahasa,sastra,sastra indonesia, inggris"),
+            SearchTextFieldItem(title: "sSastdra Inddonesia", tags: "bahasa,sastra,sastra indonesia, inggris"),
             SearchTextFieldItem(title: "Matematika", tags: "eksak,matematika"),
             SearchTextFieldItem(title: "Fisika", tags: "eksak,fisika"),
         ]
