@@ -44,6 +44,8 @@ class MainViewController: UITableViewController {
 //        let countries = localCountries()
 //        countryTextField.filterStrings(countries)
         countryTextField.filterItems(localCountriesModel())
+        countryTextField.direction = .up
+        countryTextField.keyboardIsShowing = true
     }
     
     

@@ -25,6 +25,8 @@ open class SearchTextField: UITextField {
     /// Indicate if keyboard is showing or not
     open var keyboardIsShowing = false
 
+    open var direction: Direction = .down
+    
     /// Set your custom visual theme, or just choose between pre-defined SearchTextFieldTheme.lightTheme() and SearchTextFieldTheme.darkTheme() themes
     open var theme = SearchTextFieldTheme.lightTheme() {
         didSet {
@@ -104,7 +106,6 @@ open class SearchTextField: UITextField {
     
     fileprivate var tableView: UITableView?
     fileprivate var shadowView: UIView?
-    fileprivate var direction: Direction = .down
     fileprivate var fontConversionRate: CGFloat = 0.7
     fileprivate var keyboardFrame: CGRect?
     fileprivate var timer: Timer? = nil
@@ -286,7 +287,7 @@ open class SearchTextField: UITextField {
     open func keyboardWillHide(_ notification: Notification) {
         if keyboardIsShowing {
             keyboardIsShowing = false
-            direction = .down
+            // direction = .down
             redrawSearchTableView()
         }
     }
@@ -465,11 +466,11 @@ open class SearchTextField: UITextField {
             var newFrame = frame
             newFrame.size.height += theme.cellHeight
             
-            if keyboardFrame.intersects(newFrame) {
-                direction = .up
-            } else {
-                direction = .down
-            }
+//            if keyboardFrame.intersects(newFrame) {
+//                direction = .up
+//            } else {
+//                direction = .down
+//            }
             
             redrawSearchTableView()
         }
@@ -614,7 +615,7 @@ public typealias SearchTextFieldItemHandler = (_ filteredResults: [SearchTextFie
 ////////////////////////////////////////////////////////////////////////
 // Suggestions List Direction
 
-enum Direction {
+public enum Direction {
     case down
     case up
 }
